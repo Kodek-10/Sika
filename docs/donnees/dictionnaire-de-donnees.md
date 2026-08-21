@@ -1,0 +1,90 @@
+# Dictionnaire de données
+
+> Question à laquelle ce document répond : quels sont les noms, types, énumérations, relations et propriétaires de chaque donnée ?
+> Source de vérité pour le modèle canonique — toute migration doit correspondre exactement à ce document.
+
+## `producers`
+
+| Champ | Type | Énumération / contrainte | Propriétaire |
+|---|---|---|---|
+| `id` | uuid, PK | — | Dev 1 |
+| `name` | text | requis | Dev 1 |
+| `phone_number` | text | requis, unique | Dev 1 |
+| `activity_type` | text | `elevage_volaille`, `elevage_bovin`, `elevage_porcin`, `restaurant_collectif` | Dev 1 |
+| `capacity_declared` | numeric | ≥ 0 | Dev 1 |
+| `zone` | text | libre (ex: "Bouaké") | Dev 1 |
+| `climate_zone` | enum | `sud`, `nord` | Dev 3 (définit la logique), Dev 1 (stocke) |
+| `meter_serial_number` | text | unique — voir INV-001 | Dev 1 |
+| `created_at` | timestamptz | auto | Dev 1 |
+
+## `declarations`
+
+| Champ | Type | Énumération / contrainte | Propriétaire |
+|---|---|---|---|
+| `id` | uuid, PK | — | Dev 1 |
+| `producer_id` | uuid, FK → `producers.id` | requis | Dev 1 |
+| `substrate` | text, FK → `yield_reference.substrate` | doit exister — voir INV-004 | Dev 1 (contrainte), Dev 3 (valeurs valides) |
+| `quantity_kg` | numeric | > 0 | Dev 1 |
+| `duration_hours` | numeric | > 0 | Dev 1 |
+| `declared_at` | timestamptz | auto | Dev 1 |
+
+## `meter_readings`
+
+| Champ | Type | Énumération / contrainte | Propriétaire |
+|---|---|---|---|
+| `id` | uuid, PK | — | Dev 1 |
+| `declaration_id` | uuid, FK → `declarations.id` | relation 1-1 (pas 1-N) | Dev 1 |
+| `value_m3` | numeric | ≥ 0 | Dev 1 |
+| `photo_url` | text | capture in-app uniquement — voir INV-002 | Dev 3 (capture), Dev 1 (stockage) |
+| `captured_at` | timestamptz | non modifiable après création — voir INV-002 | Dev 1 |
+| `geo_lat`, `geo_lng` | numeric | requis — voir INV-002 | Dev 3 (capture), Dev 1 (stockage) |
+
+## `scores`
+
+| Champ | Type | Énumération / contrainte | Propriétaire |
+|---|---|---|---|
+| `id` | uuid, PK | — | Dev 1 |
+| `producer_id` | uuid, FK → `producers.id` | — | Dev 1 |
+| `value` | numeric | 0-100 (à confirmer avec Dev 1 lors de l'implémentation) | Dev 1 |
+| `computed_at` | timestamptz | auto | Dev 1 |
+| `signal_intrant_extrant` | numeric | détail des 4 signaux — voir `packages/scoring-engine/README.md` | Dev 1 |
+| `signal_temporel` | numeric | idem | Dev 1 |
+| `signal_capacite` | numeric | idem | Dev 1 |
+| `signal_preuve` | numeric | idem | Dev 1 |
+
+## `yield_reference`
+
+| Champ | Type | Énumération / contrainte | Propriétaire |
+|---|---|---|---|
+| `substrate` | text, PK | ex: `fientes_volaille`, `fumier_bovin`, `lisier_porcin`, `dechets_alimentaires`, `dechets_graisses_iaa`, `dechets_poisson_marche` | Dev 3 |
+| `min_m3_per_kg`, `max_m3_per_kg` | numeric | fourchette, jamais une valeur unique — voir principe "fourchette honnête" | Dev 3 |
+| `reliability` | enum | `haute`, `moyenne`, `basse` | Dev 3 |
+| `source` | text | traçabilité obligatoire, jamais vide | Dev 3 |
+| `climate_coefficient_sud`, `climate_coefficient_nord` | numeric | angle mort actuel : coefficient nord provisoire, pas de source ivoirienne directe | Dev 3 |
+
+## `alerts`
+
+| Champ | Type | Énumération / contrainte | Propriétaire |
+|---|---|---|---|
+| `id` | uuid, PK | — | Dev 1 |
+| `producer_id` | uuid, FK → `producers.id` | — | Dev 1 |
+| `type` | enum | `maintenance`, `sur_declaration` uniquement — voir BR-001, BR-002 | Dev 1 |
+| `severity` | enum | `low`, `medium`, `high` | Dev 1 |
+| `detail` | text | — | Dev 1 |
+| `detected_at` | timestamptz | auto | Dev 1 |
+| `resolved` | boolean | défaut `false` | Dev 1 |
+
+## `payments`
+
+| Champ | Type | Énumération / contrainte | Propriétaire |
+|---|---|---|---|
+| `id` | uuid, PK | — | Dev 2 |
+| `producer_id` | uuid, FK → `producers.id` | — | Dev 2 |
+| `amount_fcfa` | numeric | > 0 | Dev 2 |
+| `status` | enum | `initiated`, `completed`, `failed` | Dev 2 |
+| `transaction_ref` | text | référence opérateur Mobile Money | Dev 2 |
+| `created_at` | timestamptz | auto | Dev 2 |
+
+## Règle de modification
+
+Toute modification de ce dictionnaire doit être accompagnée, dans la même PR, d'une migration dans `infra/migrations/` et d'une mise à jour de l'OpenAPI/`api/specification.md` si le champ est exposé via l'API.
