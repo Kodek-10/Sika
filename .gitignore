@@ -1,0 +1,29 @@
+# Dépendances
+node_modules/
+
+# Build
+dist/
+build/
+*.tsbuildinfo
+
+# Environnement — jamais de secrets dans le repo (.env.example reste versionné)
+.env
+.env.*
+!.env.example
+
+# Bases de données locales
+*.db
+*.sqlite
+*.sqlite3
+
+# Logs
+logs/
+*.log
+
+# Couverture de tests
+coverage/
+
+# OS / éditeur
+.DS_Store
+.vscode/
+.idea/
