@@ -19,7 +19,7 @@ Transforme une déclaration brute en score de confiance exploitable. Réalise FR
 | `anti-fraud/` | Vérification origine photo, unicité compteur | INV-001, INV-002, FRB-001 |
 | `producers/` | CRUD producteurs, association compteur | INV-001 |
 
-> Statut : squelette en place (modules câblés, `GET /api/health`, connexion PostgreSQL, migrations) — les sous-modules n'exposent pas encore d'endpoints.
+> Statut : squelette en place + **`POST /auth/login` implémenté** (JWT, gardes globaux `JwtAuthGuard`/`RolesGuard`, décorateurs `@Public()`/`@Roles()`). Les autres sous-modules n'exposent pas encore d'endpoints. Comptes de démo : `infra/seeds/demo-users.sh`.
 
 ## 3. Documents de référence
 
@@ -39,8 +39,9 @@ Transforme une déclaration brute en score de confiance exploitable. Réalise FR
 ```bash
 docker compose -f ../../infra/docker-compose.yml up -d   # PostgreSQL + MinIO
 ../../infra/migrations/apply.sh                          # schéma initial
+../../infra/seeds/demo-users.sh                          # comptes de démo (4 rôles)
 npm install
-cp .env.example .env    # adapter DATABASE_URL (port surchargeable via SIKA_PG_PORT)
+cp .env.example .env    # adapter DATABASE_URL (port surchargeable via SIKA_PG_PORT) + JWT_SECRET
 npm run start:dev
 ```
 
