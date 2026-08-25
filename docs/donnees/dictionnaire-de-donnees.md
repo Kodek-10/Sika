@@ -17,6 +17,19 @@
 | `meter_serial_number` | text | unique — voir INV-001 | Dev 1 |
 | `created_at` | timestamptz | auto | Dev 1 |
 
+## `users`
+
+Comptes d'authentification (FR-006, FRB-008). Ajouté par Dev 1 — migration `0002_users.sql` — car les rôles `agent`, `imf`, `mmpe` ne sont pas des producteurs.
+
+| Champ | Type | Énumération / contrainte | Propriétaire |
+|---|---|---|---|
+| `id` | uuid, PK | — | Dev 1 |
+| `phone_number` | text | requis, unique | Dev 1 |
+| `pin_hash` | text | hash bcrypt — jamais de PIN en clair | Dev 1 |
+| `role` | enum | `producteur`, `agent`, `imf`, `mmpe` | Dev 1 |
+| `producer_id` | uuid, FK → `producers.id` | obligatoire si `role = 'producteur'`, sinon null | Dev 1 |
+| `created_at` | timestamptz | auto | Dev 1 |
+
 ## `declarations`
 
 | Champ | Type | Énumération / contrainte | Propriétaire |

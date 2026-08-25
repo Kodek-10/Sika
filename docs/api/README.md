@@ -7,7 +7,7 @@
 
 | Endpoint | Producteur | Consommateurs | Statut | Preuve de vérification |
 |---|---|---|---|---|
-| `POST /auth/login` | Dev 1 | `apps/field-app/`, `apps/dashboard/` | Spécifié | À vérifier une fois implémenté |
+| `POST /auth/login` | Dev 1 | `apps/field-app/`, `apps/dashboard/` | Implémenté — vérifié en local (4 rôles, 401 générique) | PR auth-login : login OK/PIN erroné/inconnu testés par curl |
 | `POST /producers` | Dev 1 | `apps/field-app/` (agent) | Spécifié | — |
 | `GET /producers/:id` | Dev 1 | `apps/dashboard/` | Spécifié | — |
 | `GET /producers/:id/score` | Dev 1 | `packages/payments/` (Dev 2), `apps/dashboard/` | Spécifié — **contrat critique inter-devs** | À vérifier avant intégration Dev 2 |
