@@ -1,0 +1,44 @@
+# Infra locale — PostgreSQL + MinIO (stockage objet des photos)
+# Usage : docker compose -f infra/docker-compose.yml up -d
+# Voir infra/README.md et docs/donnees/dictionnaire-de-donnees.md
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: sika-postgres
+    environment:
+      POSTGRES_USER: sika
+      POSTGRES_PASSWORD: sika_dev
+      POSTGRES_DB: sika
+    ports:
+      - "${SIKA_PG_PORT:-5432}:5432"
+    volumes:
+      - sika-pgdata:/var/lib/postgresql/data
+      - ./migrations:/migrations:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U sika -d sika"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  minio:
+    image: minio/minio:latest
+    container_name: sika-minio
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: sika
+      MINIO_ROOT_PASSWORD: sika_dev_minio
+    ports:
+      - "${SIKA_MINIO_PORT:-9000}:9000"
+      - "${SIKA_MINIO_CONSOLE_PORT:-9001}:9001"
+    volumes:
+      - sika-miniodata:/data
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  sika-pgdata:
+  sika-miniodata:
