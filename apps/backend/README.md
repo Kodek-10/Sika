@@ -19,6 +19,8 @@ Transforme une déclaration brute en score de confiance exploitable. Réalise FR
 | `anti-fraud/` | Vérification origine photo, unicité compteur | INV-001, INV-002, FRB-001 |
 | `producers/` | CRUD producteurs, association compteur | INV-001 |
 
+> Statut : squelette en place (modules câblés, `GET /api/health`, connexion PostgreSQL, migrations) — les sous-modules n'exposent pas encore d'endpoints.
+
 ## 3. Documents de référence
 
 - Contrat système (invariants/règles métier) : [`docs/architecture/contrat-systeme.md`](../../docs/architecture/contrat-systeme.md)
@@ -35,10 +37,14 @@ Transforme une déclaration brute en score de confiance exploitable. Réalise FR
 ## 5. Setup local
 
 ```bash
+docker compose -f ../../infra/docker-compose.yml up -d   # PostgreSQL + MinIO
+../../infra/migrations/apply.sh                          # schéma initial
 npm install
-cp .env.example .env
+cp .env.example .env    # adapter DATABASE_URL (port surchargeable via SIKA_PG_PORT)
 npm run start:dev
 ```
+
+Vérification : `GET http://localhost:3000/api/health` → `{"status":"ok"}`.
 
 ## 6. Tests
 
