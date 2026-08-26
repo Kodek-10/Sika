@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import {
   computeConfidenceScore,
+  type Alert,
   type DeclarationInput,
   type HistoryPoint,
   type ProofQuality,
@@ -21,6 +22,26 @@ interface HistoryRow {
 
 /** Fenêtre d'historique alimentant le signal temporel — bornée pour la démo. */
 const TAILLE_HISTORIQUE_MAX = 20;
+
+/** Plafond de sécurité de la liste d'alertes (pas de pagination au MVP). */
+const ALERTES_MAX = 200;
+
+interface AlertRow {
+  producer_id: string;
+  type: Alert['type'];
+  severity: Alert['severity'];
+  detail: string;
+  detected_at: Date;
+}
+
+/** Forme de réponse conforme à docs/api/specification.md §GET /alerts. */
+export interface AlertView {
+  producerId: string;
+  type: Alert['type'];
+  severity: Alert['severity'];
+  detectedAt: Date;
+  detail: string;
+}
 
 @Injectable()
 export class ScoringService {
@@ -62,6 +83,28 @@ export class ScoringService {
 
     await this.persist(producerId, result);
     return result;
+  }
+
+  /**
+   * Liste des alertes, plus récentes d'abord (FR-004, FR-010).
+   * Contrat exact de docs/api/specification.md §GET /alerts — pas de filtre
+   * tant que le dashboard n'a pas exprimé le besoin (règle : contrat figé).
+   */
+  async listAlerts(): Promise<AlertView[]> {
+    const { rows } = await this.db.query<AlertRow>(
+      `SELECT producer_id, type, severity, detail, detected_at
+         FROM alerts
+        ORDER BY detected_at DESC
+        LIMIT $1`,
+      [ALERTES_MAX],
+    );
+    return rows.map((r) => ({
+      producerId: r.producer_id,
+      type: r.type,
+      severity: r.severity,
+      detectedAt: r.detected_at,
+      detail: r.detail,
+    }));
   }
 
   private async loadProducer(id: string): Promise<ProducerRow> {
