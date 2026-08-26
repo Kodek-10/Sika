@@ -9,14 +9,15 @@ describe('E2E — auth & producers (matrice FRB-008 partielle)', () => {
   const producteur = COMPTES_DEMO.producteur;
   const imf = COMPTES_DEMO.imf;
 
-  const producerPayload = () => ({
+  // Index obligatoire : chaque appel doit avoir un compteur UNIQUE au sein du run.
+  const producerPayload = (index: number) => ({
     name: `Producteur E2E ${RUN_ID}`,
-    phoneNumber: `+22507${RUN_ID}01`,
+    phoneNumber: `+22507${RUN_ID}${index}`,
     activityType: 'elevage_volaille',
     capacityDeclared: 500,
     zone: 'Yamoussoukro',
     climateZone: 'sud',
-    meterSerialNumber: `MTR-E2E-${RUN_ID}`,
+    meterSerialNumber: `MTR-E2E-${RUN_ID}-${index}`,
   });
 
   const login = (phoneNumber: string, pin: string) =>
@@ -69,7 +70,7 @@ describe('E2E — auth & producers (matrice FRB-008 partielle)', () => {
   describe('POST /producers', () => {
     it('crée un producteur + compte associé (201, PIN généré renvoyé une fois)', async () => {
       const token = await tokenFor(agent);
-      const payload = producerPayload();
+      const payload = producerPayload(1);
 
       const res = await request(app.getHttpServer())
         .post('/api/producers')
@@ -84,7 +85,7 @@ describe('E2E — auth & producers (matrice FRB-008 partielle)', () => {
 
     it('refuse un compteur déjà rattaché (INV-001)', async () => {
       const token = await tokenFor(agent);
-      const payload = producerPayload();
+      const payload = producerPayload(2);
       // Crée la référence…
       await request(app.getHttpServer())
         .post('/api/producers')
@@ -106,7 +107,7 @@ describe('E2E — auth & producers (matrice FRB-008 partielle)', () => {
       const res = await request(app.getHttpServer())
         .post('/api/producers')
         .set('Authorization', `Bearer ${token}`)
-        .send({ ...producerPayload(), phoneNumber: producteur.phoneNumber });
+        .send({ ...producerPayload(3), phoneNumber: producteur.phoneNumber });
 
       expect(res.status).toBe(409);
       expect(res.body.error).toBe('ERR-409-PHONE-ALREADY-REGISTERED');
@@ -120,12 +121,12 @@ describe('E2E — auth & producers (matrice FRB-008 partielle)', () => {
       const resProducteur = await request(serveur)
         .post('/api/producers')
         .set('Authorization', `Bearer ${tokenProducteur}`)
-        .send(producerPayload());
+        .send(producerPayload(6));
       const resImf = await request(serveur)
         .post('/api/producers')
         .set('Authorization', `Bearer ${tokenImf}`)
-        .send(producerPayload());
-      const resAnonyme = await request(serveur).post('/api/producers').send(producerPayload());
+        .send(producerPayload(7));
+      const resAnonyme = await request(serveur).post('/api/producers').send(producerPayload(8));
 
       expect(resProducteur.status).toBe(403);
       expect(resImf.status).toBe(403);
@@ -136,7 +137,7 @@ describe('E2E — auth & producers (matrice FRB-008 partielle)', () => {
   describe('GET /producers/:id', () => {
     it('renvoie la fiche du producteur créé', async () => {
       const token = await tokenFor(agent);
-      const payload = { ...producerPayload(), phoneNumber: `+22507${RUN_ID}03` };
+      const payload = { ...producerPayload(4), phoneNumber: `+22507${RUN_ID}03` };
 
       const cree = await request(app.getHttpServer())
         .post('/api/producers')
@@ -169,7 +170,7 @@ describe('E2E — auth & producers (matrice FRB-008 partielle)', () => {
   describe('boucle complète producteur', () => {
     it('le producteur créé peut se connecter avec son PIN généré', async () => {
       const tokenAgent = await tokenFor(agent);
-      const payload = { ...producerPayload(), phoneNumber: `+22507${RUN_ID}04` };
+      const payload = { ...producerPayload(5), phoneNumber: `+22507${RUN_ID}04` };
 
       const cree = await request(app.getHttpServer())
         .post('/api/producers')
