@@ -58,6 +58,7 @@ Le détail complet avec exemples de requête/réponse est dans [`../api/specific
 | `ERR-403-ROLE-FORBIDDEN` | Rôle authentifié mais non autorisé pour cette action (FR-006, FRB-008) |
 | `ERR-404-PRODUCER-NOT-FOUND` | Producteur inexistant |
 | `ERR-409-METER-ALREADY-ASSIGNED` | Violation de INV-001 |
+| `ERR-409-PHONE-ALREADY-REGISTERED` | Numéro de téléphone déjà rattaché à un compte (`POST /producers`) |
 | `ERR-422-UNKNOWN-SUBSTRATE` | Violation de INV-004, FRB-006 |
 | `ERR-502-PAYMENT-PROVIDER-UNAVAILABLE` | Échec de l'appel à l'opérateur Mobile Money |
 

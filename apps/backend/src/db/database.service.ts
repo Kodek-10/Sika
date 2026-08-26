@@ -19,4 +19,23 @@ export class DatabaseService implements OnModuleInit, OnModuleDestroy {
   ): Promise<QueryResult<T>> {
     return this.pool.query<T>(text, params as never[]);
   }
+
+  async withTransaction<T>(work: (query: DatabaseService['query']) => Promise<T>): Promise<T> {
+    const client = await this.pool.connect();
+    const txQuery = async <R extends QueryResultRow = QueryResultRow>(
+      text: string,
+      params?: unknown[],
+    ) => client.query<R>(text, params as never[]);
+    try {
+      await client.query('BEGIN');
+      const result = await work(txQuery);
+      await client.query('COMMIT');
+      return result;
+    } catch (error) {
+      await client.query('ROLLBACK');
+      throw error;
+    } finally {
+      client.release();
+    }
+  }
 }
