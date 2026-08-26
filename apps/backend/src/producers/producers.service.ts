@@ -34,13 +34,13 @@ export class ProducersService {
           'SELECT 1 FROM producers WHERE meter_serial_number = $1',
           [dto.meterSerialNumber],
         );
-        if (meterConflict.rowCount > 0) {
+        if ((meterConflict.rowCount ?? 0) > 0) {
           throw new MeterAlreadyAssignedError();
         }
         const phoneConflict = await query('SELECT 1 FROM users WHERE phone_number = $1', [
           dto.phoneNumber,
         ]);
-        if (phoneConflict.rowCount > 0) {
+        if ((phoneConflict.rowCount ?? 0) > 0) {
           throw new PhoneAlreadyRegisteredError();
         }
 
@@ -120,8 +120,17 @@ export class ProducersService {
   }
 }
 
-class MeterAlreadyAssignedError extends Error {}
-class PhoneAlreadyRegisteredError extends Error {}
+class MeterAlreadyAssignedError extends ConflictException {
+  constructor() {
+    super({ statusCode: 409, error: 'ERR-409-METER-ALREADY-ASSIGNED' });
+  }
+}
+
+class PhoneAlreadyRegisteredError extends ConflictException {
+  constructor() {
+    super({ statusCode: 409, error: 'ERR-409-PHONE-ALREADY-REGISTERED' });
+  }
+}
 
 function isUniqueViolation(error: unknown, constraint: string): boolean {
   return (
