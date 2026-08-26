@@ -8,11 +8,15 @@ import { JwtAuthGuard, RolesGuard } from './guards';
 
 @Module({
   imports: [
-    JwtModule.register({
-      secret: process.env.JWT_SECRET,
-      signOptions: {
-        expiresIn: (process.env.JWT_EXPIRES_IN ?? '12h') as StringValue,
-      },
+    // Lecture PARESSEUSE de l'env : un register() direct capturerait process.env
+    // à l'import du module, avant le chargement du .env (bug révélé par l'e2e).
+    JwtModule.registerAsync({
+      useFactory: () => ({
+        secret: process.env.JWT_SECRET,
+        signOptions: {
+          expiresIn: (process.env.JWT_EXPIRES_IN ?? '12h') as StringValue,
+        },
+      }),
     }),
   ],
   controllers: [AuthController],

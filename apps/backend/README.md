@@ -50,3 +50,8 @@ Vérification : `GET http://localhost:3000/api/health` → `{"status":"ok"}`.
 ## 6. Tests
 
 Voir [`docs/test/README.md`](../../docs/test/README.md) — cas obligatoires incluant FRB-006, FRB-007, FRB-008.
+
+```bash
+npm test        # unitaires (moteur mocké, rapide)
+npm run test:e2e   # HTTP de bout en bout — prérequis : compose up + apply.sh + demo-users.sh
+```
