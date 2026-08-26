@@ -109,7 +109,7 @@ export class DeclarationsService {
             dto.geoLocation.lng,
           ],
         );
-        await this.scoring.persistWithin(query, dto.producerId, result);
+        await this.scoring.persistWithin(query, dto.producerId, result, dto.declarationId);
       });
     } catch (error) {
       // Course entre deux synchronisations du même élément de file : l'autre
@@ -166,9 +166,7 @@ export class DeclarationsService {
   ): Promise<CreateDeclarationResult | null> {
     const { rows } = await this.db.query<{ id: string; alertes: string }>(
       `SELECT d.id,
-              (SELECT count(*) FROM alerts a
-                WHERE a.producer_id = d.producer_id
-                  AND a.detected_at >= d.declared_at) AS alertes
+              (SELECT count(*) FROM alerts a WHERE a.declaration_id = d.id) AS alertes
          FROM declarations d
         WHERE d.id = $1`,
       [declarationId],

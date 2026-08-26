@@ -167,6 +167,7 @@ describe('ScoringService — listAlerts (GET /alerts)', () => {
         detail: 'Lecture compteur +112 % au-dessus de la fourchette attendue',
         detected_at: detected,
         resolved: false,
+        declaration_id: null,
       },
     ]);
 
@@ -181,6 +182,7 @@ describe('ScoringService — listAlerts (GET /alerts)', () => {
         detectedAt: detected,
         detail: 'Lecture compteur +112 % au-dessus de la fourchette attendue',
         resolved: false,
+        declarationId: null,
       },
     ]);
     // Tri côté SQL : la requête doit porter le ORDER BY détect_at DESC.
@@ -225,6 +227,7 @@ describe('ScoringService — resolveAlert (prérequis BR-003)', () => {
     detail: 'Entretien probable',
     detected_at: new Date('2026-08-14T10:00:00Z'),
     resolved,
+    declaration_id: null,
   });
 
   it('marque l alerte comme traitée', async () => {

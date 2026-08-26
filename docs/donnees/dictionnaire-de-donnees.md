@@ -84,8 +84,9 @@ Comptes d'authentification (FR-006, FRB-008). Ajouté par Dev 1 — migration `0
 | `type` | enum | `maintenance`, `sur_declaration` uniquement — voir BR-001, BR-002 | Dev 1 |
 | `severity` | enum | `low`, `medium`, `high` | Dev 1 |
 | `detail` | text | — | Dev 1 |
+| `declaration_id` | uuid, FK → `declarations.id` | déclaration qui a levé l'alerte ; nullable (migration `0006`) | Dev 1 |
 | `detected_at` | timestamptz | auto | Dev 1 |
-| `resolved` | boolean | défaut `false` | Dev 1 |
+| `resolved` | boolean | défaut `false` ; passe à `true` via `PATCH /alerts/:id/resolve` | Dev 1 |
 
 ## `payments`
 

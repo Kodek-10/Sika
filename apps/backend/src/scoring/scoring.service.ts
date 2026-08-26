@@ -46,6 +46,7 @@ interface AlertRow {
   detail: string;
   detected_at: Date;
   resolved: boolean;
+  declaration_id: string | null;
 }
 
 /** Valeurs acceptées par `GET /alerts?resolved=` — défaut : les actives seules. */
@@ -60,6 +61,8 @@ export interface AlertView {
   detectedAt: Date;
   detail: string;
   resolved: boolean;
+  /** Déclaration qui a levé l'alerte — `null` pour les alertes antérieures à la migration 0006. */
+  declarationId: string | null;
 }
 
 /** Nombre de points d'historique renvoyés par `GET /producers/:id/score`. */
@@ -166,7 +169,7 @@ export class ScoringService {
     // Paramétré, jamais concaténé (SECURITY.md §4) : `null` = pas de filtre.
     const filtre = resolved === 'all' ? null : resolved === 'true';
     const { rows } = await this.db.query<AlertRow>(
-      `SELECT id, producer_id, type, severity, detail, detected_at, resolved
+      `SELECT id, producer_id, type, severity, detail, detected_at, resolved, declaration_id
          FROM alerts
         WHERE ($2::boolean IS NULL OR resolved = $2)
         ORDER BY detected_at DESC
@@ -181,6 +184,7 @@ export class ScoringService {
       detectedAt: r.detected_at,
       detail: r.detail,
       resolved: r.resolved,
+      declarationId: r.declaration_id,
     }));
   }
 
@@ -196,7 +200,7 @@ export class ScoringService {
       `UPDATE alerts
           SET resolved = true
         WHERE id = $1
-        RETURNING id, producer_id, type, severity, detail, detected_at, resolved`,
+        RETURNING id, producer_id, type, severity, detail, detected_at, resolved, declaration_id`,
       [alertId],
     );
     if (rows.length === 0) {
@@ -214,6 +218,7 @@ export class ScoringService {
       detectedAt: r.detected_at,
       detail: r.detail,
       resolved: r.resolved,
+      declarationId: r.declaration_id,
     };
   }
 
@@ -301,7 +306,7 @@ export class ScoringService {
 
   private async lastAlert(producerId: string): Promise<AlertView | null> {
     const { rows } = await this.db.query<AlertRow>(
-      `SELECT id, producer_id, type, severity, detail, detected_at, resolved
+      `SELECT id, producer_id, type, severity, detail, detected_at, resolved, declaration_id
          FROM alerts WHERE producer_id = $1
         ORDER BY detected_at DESC LIMIT 1`,
       [producerId],
@@ -316,6 +321,7 @@ export class ScoringService {
       detectedAt: r.detected_at,
       detail: r.detail,
       resolved: r.resolved,
+      declarationId: r.declaration_id,
     };
   }
 
@@ -360,6 +366,7 @@ export class ScoringService {
     query: TxQuery,
     producerId: string,
     result: ScoreResult,
+    declarationId: string | null = null,
   ): Promise<void> {
     {
       await query(
@@ -379,8 +386,9 @@ export class ScoringService {
 
       for (const alert of result.alerts) {
         await query(
-          'INSERT INTO alerts (producer_id, type, severity, detail) VALUES ($1, $2, $3, $4)',
-          [producerId, alert.type, alert.severity, alert.detail],
+          `INSERT INTO alerts (producer_id, type, severity, detail, declaration_id)
+           VALUES ($1, $2, $3, $4, $5)`,
+          [producerId, alert.type, alert.severity, alert.detail, declarationId],
         );
       }
     }

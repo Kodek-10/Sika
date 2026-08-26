@@ -112,12 +112,15 @@
 **Paramètre** `resolved` : `false` (défaut, alertes **actives** seules — c'est ce que vise FR-010), `true` (historique traité), `all`.
 ```json
 [{
-  "alertId": "uuid", "producerId": "uuid", "type": "sur_declaration", "severity": "high",
+  "alertId": "uuid", "producerId": "uuid", "declarationId": "uuid",
+  "type": "sur_declaration", "severity": "high",
   "detectedAt": "2026-08-14T10:00:00Z", "resolved": false,
   "detail": "Lecture compteur +112 % au-dessus de la fourchette attendue"
 }]
 ```
 `type` ne prend jamais que `maintenance` ou `sur_declaration` — voir BR-001, BR-002.
+
+`declarationId` permet de remonter à la déclaration qui a levé l'alerte — c'est ce dont un agent a besoin pour arbitrer. `null` pour les alertes antérieures à la migration `0006`.
 
 ## `PATCH /alerts/:id/resolve`
 **Rôles** : `agent`, `mmpe` (l'IMF consulte mais n'arbitre pas le terrain). **Réalise** : prérequis de BR-003.

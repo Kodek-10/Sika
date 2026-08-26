@@ -23,6 +23,7 @@ infra/migrations/apply.sh
 | `0003_seed_yield_reference_provisoire.sql` | Référentiel **provisoire**, 3 substrats (contenu = Dev 3, D10) |
 | `0004_fix_substrate_naming.sql` | Aligne `restes_alimentaires` sur `dechets_alimentaires` du dictionnaire |
 | `0005_payments_idempotency.sql` | Idempotence des versements, quarantaine, checkpoint (FR-007) |
+| `0006_alerts_declaration_link.sql` | Rattache chaque alerte à la déclaration qui l'a levée (FR-010) |
 
 ## Règles
 

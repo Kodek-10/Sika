@@ -73,8 +73,14 @@ describe('DeclarationsService — POST /declarations (FR-001, FR-002)', () => {
     const inserts = h.txQuery.mock.calls.map((c) => String(c[0]).replace(/\s+/g, ' ').trim());
     expect(inserts.some((t) => t.startsWith('INSERT INTO declarations'))).toBe(true);
     expect(inserts.some((t) => t.startsWith('INSERT INTO meter_readings'))).toBe(true);
-    // Le score est écrit par le service de scoring DANS la même transaction.
-    expect(h.persistWithin).toHaveBeenCalledWith(h.txQuery, PRODUCER_ID, expect.anything());
+    // Le score est écrit par le service de scoring DANS la même transaction,
+    // avec le rattachement de l'alerte à SA déclaration (migration 0006).
+    expect(h.persistWithin).toHaveBeenCalledWith(
+      h.txQuery,
+      PRODUCER_ID,
+      expect.anything(),
+      DECLARATION_ID,
+    );
   });
 
   it("l'identifiant client devient l'id de déclaration (idempotence par construction)", async () => {
