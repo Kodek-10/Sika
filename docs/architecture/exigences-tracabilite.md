@@ -13,7 +13,7 @@
 | FR-004 | Génération d'alerte | `packages/scoring-engine/`, `apps/backend/src/scoring/` | Dev 1 | BR-001, BR-002, FRB-005 |
 | FR-005 | Consultation score/historique | `apps/backend/src/scoring/`, `apps/dashboard/` | Dev 1 (API), non attribué (UI) | — |
 | FR-006 | Rôles et permissions | `apps/backend/src/auth/` | Dev 1 | FRB-008 |
-| FR-007 | Versement Mobile Money | `packages/payments/` | Dev 2 | BR-003 |
+| FR-007 | Versement Mobile Money | `packages/payments/`, `apps/backend/src/payments/` | Dev 2 | BR-003 — 16 tests |
 | FR-008 | Fonctionnement hors-ligne | `apps/field-app/` | Dev 3 | FRB-002 |
 | FR-009 | Référentiel de rendement | `packages/scoring-engine/yield-model/` | Dev 3 | INV-004, FRB-006 |
 | FR-010 | Priorisation d'audits | `apps/backend/src/scoring/`, `apps/dashboard/` | Dev 1 (API), non attribué (UI) | — |
@@ -24,8 +24,17 @@
 | INV-005 | Déterminisme du score | `packages/scoring-engine/` | Dev 1 | — |
 | BR-001 | Sous-performance ≠ fraude | `packages/scoring-engine/` | Dev 1 | FRB-007 |
 | BR-002 | Seuil sur-déclaration | `packages/scoring-engine/` | Dev 1 | — |
-| BR-003 | Éligibilité Mobile Money | `packages/payments/`, `apps/backend/src/scoring/` | Dev 2, Dev 1 | — |
+| BR-003 | Éligibilité Mobile Money | `apps/backend/src/scoring/` (décision), `apps/backend/src/payments/` (application) | Dev 1, Dev 2 | `payments.service.spec.ts`, `scoring.service.spec.ts` |
 | BR-004 | Aucun partenariat non prouvé présenté comme signé | Communication (Dev 2), pas de composant technique | Dev 2 | Revue avant chaque pitch |
+
+## Garanties sans composant propriétaire livré
+
+| Identifiant | Manque | Conséquence aujourd'hui |
+|---|---|---|
+| FR-008, FRB-002 | `apps/field-app/` (Dev 3) | Le mode hors-ligne n'existe pas. L'idempotence côté serveur qui doit l'absorber est en place et testée |
+| FR-009 | `yield-model/` (Dev 3) | Référentiel provisoire non calibré, 3 substrats sur 6, coefficient nord sans source |
+| FR-005, FR-010 (UI) | `apps/dashboard/` | Les données sont exposées par l'API, rien ne les affiche |
+| FRB-001 (complet) | Chaîne d'upload | Voir D11 dans `../decisions/DECISIONS-DEV3.md` |
 
 ## Comment utiliser cette matrice
 

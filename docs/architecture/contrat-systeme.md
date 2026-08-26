@@ -40,8 +40,15 @@ Une lecture supérieure à +100% de la borne haute de la fourchette attendue dé
 **Lié à** : FR-004.
 
 ### BR-003 — Éligibilité au versement Mobile Money
-Un producteur est éligible à un versement si son score ≥ seuil défini (valeur à fixer par Dev 1 + Dev 2 ensemble, documentée ici dès qu'actée) **et** qu'il n'a aucune alerte non résolue.
-**Lié à** : FR-007.
+Un producteur est éligible à un versement si **toutes** ces conditions sont vraies :
+1. son score ≥ **70/100** (D1) ;
+2. il a au moins **3 déclarations** à son historique (D2) — évite qu'un producteur devienne éligible sur une seule déclaration favorable ;
+3. il n'a **aucune alerte bloquante non résolue**. Une alerte `sur_declaration` bloque toujours ; une alerte `maintenance` **ne bloque pas** (D3), sans quoi on punirait une sous-performance — ce que BR-001 interdit explicitement.
+
+Ces trois valeurs sont **provisoires en attente de ratification inter-devs** : elles sont isolées dans `apps/backend/src/scoring/scoring.constants.ts` pour qu'un accord se traduise par une ligne à changer, sans refactor. Voir `docs/decisions/DECISIONS-DEV2.md`.
+
+L'éligibilité est décidée **uniquement** par `GET /producers/:id/score`. `packages/payments/` la consomme et ne la recalcule jamais.
+**Lié à** : FR-007, BR-001.
 
 ### BR-004 — Aucun partenariat présenté comme signé sans preuve
 Un partenariat IMF/MMPE ne peut être communiqué (pitch, dossier, dashboard) comme "signé" ou "confirmé" sans document écrit (lettre d'intention ou contrat). Statut réel à suivre dans `packages/payments/PARTNERSHIPS.md`.
@@ -57,8 +64,11 @@ Le détail complet avec exemples de requête/réponse est dans [`../api/specific
 | `ERR-401-UNAUTHORIZED` | Token absent ou invalide |
 | `ERR-403-ROLE-FORBIDDEN` | Rôle authentifié mais non autorisé pour cette action (FR-006, FRB-008) |
 | `ERR-404-PRODUCER-NOT-FOUND` | Producteur inexistant |
+| `ERR-404-ALERT-NOT-FOUND` | Alerte inexistante (`PATCH /alerts/:id/resolve`) |
 | `ERR-409-METER-ALREADY-ASSIGNED` | Violation de INV-001 |
 | `ERR-409-PHONE-ALREADY-REGISTERED` | Numéro de téléphone déjà rattaché à un compte (`POST /producers`) |
+| `ERR-409-PRODUCER-NOT-ELIGIBLE` | Violation de BR-003 — versement refusé, motif dans `message` |
+| `ERR-409-PAYOUT-IN-PROGRESS` | Versement concurrent en cours pour la même intention |
 | `ERR-422-UNKNOWN-SUBSTRATE` | Violation de INV-004, FRB-006 |
 | `ERR-502-PAYMENT-PROVIDER-UNAVAILABLE` | Échec de l'appel à l'opérateur Mobile Money |
 

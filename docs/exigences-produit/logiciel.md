@@ -39,4 +39,13 @@ Chaque endpoint protégé doit refuser une requête si le rôle de l'appelant n'
 
 | FRB-xxx | Testé | Preuve |
 |---|---|---|
-| FRB-001 à FRB-008 | Non — code non initialisé | À mettre à jour au fur et à mesure de l'implémentation, avec lien vers le test correspondant |
+| FRB-001 | **Partiellement** | `apps/backend/tests/anti-fraud.service.spec.ts` — le serveur vérifie que la photo vient du stockage Sika, il ne peut pas encore prouver qu'elle vient de l'appareil intégré. Voir `docs/decisions/DECISIONS-DEV3.md` (D11) |
+| FRB-002 | Non | `apps/field-app/` n'existe pas |
+| FRB-003 | Non (UI) | Validation équivalente côté serveur : `apps/backend/src/declarations/dto/create-declaration.dto.ts` |
+| FRB-004 | Non mesuré | Le flux `POST /declarations` → `GET /producers/:id/score` existe ; la latence n'a pas été chronométrée contre une vraie base |
+| FRB-005 | Non | Aucune interface |
+| FRB-006 | **Oui** | `apps/backend/tests/scoring.service.spec.ts` (adaptateur → ERR-422) + contrainte FK en base |
+| FRB-007 | **Oui** | `packages/scoring-engine/tests/engine.test.ts` — cas obligatoire, à ne jamais retirer |
+| FRB-008 | **Partiellement** | `apps/backend/test/auth-producers.spec.ts` (e2e) + cloisonnement producteur testé sur déclarations, score et versements. La matrice rôle × endpoint n'est pas exhaustive |
+
+Rappel BR-004 : cette table dit ce qui est vérifié, pas ce qui est espéré. Une exigence non couverte reste marquée « Non ».

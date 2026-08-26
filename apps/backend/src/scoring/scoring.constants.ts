@@ -1,6 +1,6 @@
 /**
  * ⚠️ CONSTANTES PROVISOIRES — en attente de ratification inter-devs
- * (D1-D3, voir Décisions inter-devs / DECISIONS-DEV2.md).
+ * (D1-D3, voir docs/decisions/DECISIONS-DEV2.md).
  *
  * Isolées ici volontairement : un accord inter-devs = une ligne à changer,
  * zéro refactor. Consommateurs prévus : GET /producers/:id/score (D1, D2)
