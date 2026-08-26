@@ -8,8 +8,8 @@
 | Endpoint | Producteur | Consommateurs | Statut | Preuve de vérification |
 |---|---|---|---|---|
 | `POST /auth/login` | Dev 1 | `apps/field-app/`, `apps/dashboard/` | Implémenté — vérifié en local (4 rôles, 401 générique) | PR auth-login : login OK/PIN erroné/inconnu testés par curl |
-| `POST /producers` | Dev 1 | `apps/field-app/` (agent) | Spécifié | — |
-| `GET /producers/:id` | Dev 1 | `apps/dashboard/` | Spécifié | — |
+| `POST /producers` | Dev 1 | `apps/field-app/` (agent) | Implémenté — vérifié en local (`agent` seul, 409 compteur/téléphone) | PR producteurs : création avec/sans PIN, doublons 409, matrice rôles testés par curl |
+| `GET /producers/:id` | Dev 1 | `apps/dashboard/` | Implémenté — vérifié en local (`agent`/`imf`/`mmpe`, 404 inconnu) | PR producteurs : lecture + 404 testés par curl |
 | `GET /producers/:id/score` | Dev 1 | `packages/payments/` (Dev 2), `apps/dashboard/` | Spécifié — **contrat critique inter-devs** | À vérifier avant intégration Dev 2 |
 | `POST /declarations` | Dev 1 | `apps/field-app/` (Dev 3) | Spécifié — **contrat critique inter-devs** | À vérifier avant intégration Dev 3 |
 | `GET /declarations/:producerId` | Dev 1 | `apps/dashboard/` | Spécifié | — |
