@@ -16,8 +16,13 @@ Transforme une déclaration brute en score de confiance exploitable. Réalise FR
 | `declarations/` | Réception, validation des déclarations | FR-001, INV-004 |
 | `scoring/` | Orchestration du calcul de score, déclenchement d'alertes | FR-003, FR-004, FR-010 |
 | `auth/` | Rôles et permissions (`producteur`, `agent`, `imf`, `mmpe`) | FR-006, FRB-008 |
-| `anti-fraud/` | Vérification origine photo, unicité compteur | INV-001, INV-002, FRB-001 |
+| `anti-fraud/` | Qualité de preuve : origine photo, géoloc, horodatage | INV-002, FRB-001 (partiel — D11) |
 | `producers/` | CRUD producteurs, association compteur | INV-001 |
+| `payments/` | Orchestration du versement, application de BR-003 | FR-007 |
+
+> Statut : **flux central complet côté API.** `POST /auth/login` (JWT, gardes globaux `JwtAuthGuard`/`RolesGuard`), `POST /producers`, `GET /producers/:id`, `POST /declarations` (idempotent par UUID client), `GET /declarations/:producerId`, `GET /producers/:id/score` (décide BR-003), `GET /alerts` + `PATCH /alerts/:id/resolve`, `POST /payments/payout` (opérateur **simulé**), `GET /payments/:producerId`. Comptes de démo : `infra/seeds/demo-users.sh`.
+>
+> ⚠️ `yield-model/` n'est pas livré par Dev 3 : `src/scoring/yield-model.adapter.ts` en tient lieu (D6), en lisant `yield_reference` en base sans coder aucun coefficient en dur. Quand Dev 3 livre, **ce seul fichier** est remplacé.
 
 ## 3. Documents de référence
 
@@ -35,11 +40,23 @@ Transforme une déclaration brute en score de confiance exploitable. Réalise FR
 ## 5. Setup local
 
 ```bash
+docker compose -f ../../infra/docker-compose.yml up -d   # PostgreSQL + MinIO
+../../infra/migrations/apply.sh                          # schéma initial
+../../infra/seeds/demo-users.sh                          # comptes de démo (4 rôles)
 npm install
-cp .env.example .env
+cp .env.example .env    # adapter DATABASE_URL (port surchargeable via SIKA_PG_PORT) + JWT_SECRET
 npm run start:dev
 ```
+
+Vérification : `GET http://localhost:3000/api/health` → `{"status":"ok"}`.
 
 ## 6. Tests
 
 Voir [`docs/test/README.md`](../../docs/test/README.md) — cas obligatoires incluant FRB-006, FRB-007, FRB-008.
+
+```bash
+npm test           # 64 unitaires (base mockée, rapide)
+npm run test:e2e   # 13 e2e HTTP — prérequis : compose up + apply.sh + demo-users.sh
+```
+
+Le test `tests/sql-schema.spec.ts` compare le SQL écrit dans `src/` au schéma des migrations, sans base. Il existe parce qu'un mock ne peut pas détecter une colonne inexistante : il reproduit l'erreur du code au lieu de la révéler.
