@@ -147,6 +147,51 @@ describe('ScoringService — orchestration', () => {
   });
 });
 
+describe('ScoringService — listAlerts (GET /alerts)', () => {
+  function makeServiceWithAlerts(rows: unknown[]) {
+    const db = makeDb();
+    db.query.mockResolvedValue({ rows });
+    const service = new ScoringService(db as never, {} as never);
+    return { service, db };
+  }
+
+  it('renvoie les alertes mappées en camelCase, plus récentes d abord', async () => {
+    const detected = new Date('2026-08-14T10:00:00Z');
+    const { service, db } = makeServiceWithAlerts([
+      {
+        producer_id: PRODUCER_ID,
+        type: 'sur_declaration',
+        severity: 'high',
+        detail: 'Lecture compteur +112 % au-dessus de la fourchette attendue',
+        detected_at: detected,
+      },
+    ]);
+
+    const alerts = await service.listAlerts();
+
+    expect(alerts).toEqual([
+      {
+        producerId: PRODUCER_ID,
+        type: 'sur_declaration',
+        severity: 'high',
+        detectedAt: detected,
+        detail: 'Lecture compteur +112 % au-dessus de la fourchette attendue',
+      },
+    ]);
+    // Tri côté SQL : la requête doit porter le ORDER BY détect_at DESC.
+    expect(db.query).toHaveBeenCalledWith(
+      expect.stringContaining('ORDER BY detected_at DESC'),
+      expect.anything(),
+    );
+  });
+
+  it('renvoie une liste vide sans alerte — pas une 404', async () => {
+    const { service } = makeServiceWithAlerts([]);
+
+    await expect(service.listAlerts()).resolves.toEqual([]);
+  });
+});
+
 describe('YieldModelAdapter — contrat D6', () => {
   function makeAdapter(query: QueryFn) {
     return new YieldModelAdapter({ query } as never);
