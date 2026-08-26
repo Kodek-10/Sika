@@ -11,12 +11,22 @@ import { JwtAuthGuard, RolesGuard } from './guards';
     // Lecture PARESSEUSE de l'env : un register() direct capturerait process.env
     // à l'import du module, avant le chargement du .env (bug révélé par l'e2e).
     JwtModule.registerAsync({
-      useFactory: () => ({
-        secret: process.env.JWT_SECRET,
-        signOptions: {
-          expiresIn: (process.env.JWT_EXPIRES_IN ?? '12h') as StringValue,
-        },
-      }),
+      useFactory: () => {
+        const secret = process.env.JWT_SECRET;
+        // Sans secret, NestJS démarrait et ne cassait qu'au premier login —
+        // un service « up » mais incapable d'authentifier. On échoue au boot.
+        if (!secret) {
+          throw new Error(
+            'JWT_SECRET manquant : copier apps/backend/.env.example vers .env et le renseigner.',
+          );
+        }
+        return {
+          secret,
+          signOptions: {
+            expiresIn: (process.env.JWT_EXPIRES_IN ?? '12h') as StringValue,
+          },
+        };
+      },
     }),
   ],
   controllers: [AuthController],

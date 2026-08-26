@@ -28,17 +28,23 @@ sika/
 │   ├── developpement/
 │   ├── test/
 │   ├── demo/
+│   ├── decisions/                 # décisions inter-devs non ratifiées
 │   └── adr/
 ├── apps/
 │   ├── backend/                   # Dev 1 — NestJS
 │   ├── field-app/                  # Dev 3 — PWA offline-first
 │   └── dashboard/                  # non attribué
 ├── packages/
-│   ├── scoring-engine/             # Dev 1 (+ yield-model/ = Dev 3)
-│   ├── payments/                   # Dev 2
-│   └── shared-types/
-└── infra/
+│   ├── scoring-engine/             # Dev 1 — implémenté (+ yield-model/ = Dev 3, non livré)
+│   ├── payments/                   # Dev 2 — implémenté (opérateur simulé)
+│   └── shared-types/               # non démarré
+└── infra/                          # migrations, compose, seeds
 ```
+
+## État du projet
+
+Le flux central est complet **côté API** (11 endpoints, 96 tests verts) ; il n'a pas encore d'interface.
+Détail par module : [`docs/README.md`](./docs/README.md) section « Statut actuel ».
 
 ## Le flux à ne jamais perdre de vue
 

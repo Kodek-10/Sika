@@ -1,5 +1,5 @@
 -- 0003_seed_yield_reference_provisoire.sql
--- ⚠️ CONTENU PROVISOIRE — D10 (DECISIONS-DEV3.md) : « schéma = Dev 1, contenu = Dev 3 ».
+-- ⚠️ CONTENU PROVISOIRE — D10 (docs/decisions/DECISIONS-DEV3.md) : « schéma = Dev 1, contenu = Dev 3 ».
 -- Ordres de grandeur issus de la littérature biométhanisation, NON calibrés.
 -- À remplacer dès que Dev 3 livre le référentiel officiel (aucun changement de schéma).
 -- Idempotent : ne touche jamais une ligne existante.

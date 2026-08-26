@@ -44,4 +44,17 @@ Les décisions structurantes sont conservées dans [`adr/`](./adr/).
 
 ## Statut actuel
 
-Cette documentation décrit la cible du MVP avant initialisation complète du code. Les commandes, mesures de performance et détails de production seront mis à jour avec des preuves au fur et à mesure de l'implémentation.
+| Domaine | État |
+|---|---|
+| `apps/backend/` | **Implémenté** — auth, producteurs, déclarations, scoring, alertes, paiement. 11 endpoints |
+| `packages/scoring-engine/` | **Implémenté** — moteur pur, 4 signaux, 16 tests |
+| `packages/payments/` | **Implémenté** — opérateur **simulé**, idempotence, 16 tests |
+| `infra/` | **Implémenté** — 5 migrations, compose PostgreSQL + MinIO, seeds |
+| `packages/scoring-engine/yield-model/` | **Non livré** (Dev 3) — adaptateur provisoire côté backend, référentiel non calibré |
+| `apps/field-app/` | **Non démarré** (Dev 3) — bloque FR-008, FRB-002, FRB-003, FRB-005 |
+| `apps/dashboard/` | **Non démarré**, non attribué |
+| `packages/shared-types/` | **Non démarré** |
+
+96 tests automatisés, tous verts. Le flux central `Déclaration → Relevé → Score → Alerte` est complet **côté API** ; il n'a pas encore d'interface, et n'a jamais été rejoué contre une base réelle sur la machine ayant produit ce lot (Docker indisponible).
+
+Les mesures de performance (FRB-004) et les détails de production restent à établir avec preuves.

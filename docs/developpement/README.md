@@ -64,17 +64,33 @@ Pas terminé si : la doc du module n'est pas à jour, un autre dev ne peut pas c
 ```bash
 git clone <repo>
 cd sika
+
+# 1. Infra
 docker compose -f infra/docker-compose.yml up -d
-cd apps/backend && npm install && npm run start:dev
-cd apps/field-app && npm install && npm run dev
+infra/migrations/apply.sh        # applique les migrations non encore appliquées
+infra/seeds/demo-users.sh        # comptes de démo pour les 4 rôles
+
+# 2. Packages (dépendances locales du backend, à construire d'abord)
+cd packages/scoring-engine && npm install && npm run build && cd ../..
+cd packages/payments      && npm install && npm run build && cd ../..
+
+# 3. Backend
+cd apps/backend && npm install && cp .env.example .env && npm run start:dev
+# vérification : GET http://localhost:3000/api/health -> {"status":"ok"}
 ```
+
+`apps/field-app/` n'existe pas encore (Dev 3).
 
 ## 7. Statut des contrats en cours
 
 | Contrat | Statut | Dernière synchro |
 |---|---|---|
-| `estimateExpectedYield()` | Non stabilisé — signature proposée dans `packages/scoring-engine/README.md`, à valider | — |
-| `GET /producers/:id/score` | Spécifié, non implémenté | — |
-| `POST /declarations` | Spécifié, non implémenté | — |
+| `estimateExpectedYield()` | Signature **respectée** par l'adaptateur provisoire du backend (D6). Module Dev 3 **non livré** | — |
+| `GET /producers/:id/score` | **Implémenté et testé.** Forme enrichie d'un objet `eligibility` — à valider avec Dev 2 | — |
+| `POST /declarations` | **Implémenté et testé.** Ajout d'un champ `declarationId` (UUID client) portant l'idempotence — **à valider avec Dev 3** avant de coder la file d'attente | — |
+| `POST /payments/payout` | **Implémenté**, opérateur simulé. Seuils D1-D3 non ratifiés | — |
+| `MobileMoneyProvider` | **Implémenté** — point d'extension unique pour un opérateur réel | — |
+
+⚠️ « Implémenté » = testé et conforme à la spec. Aucun de ces contrats n'a encore été appelé par un consommateur réel (`apps/field-app/`, `apps/dashboard/` n'existent pas).
 
 À mettre à jour à chaque point de synchro réel.

@@ -87,8 +87,17 @@ export class ProducersService {
       ) {
         throw error;
       }
+      // Les pré-vérifications SELECT ci-dessus perdent la course en concurrence :
+      // c'est alors la contrainte unique qui tranche. Sans ce rattrapage, deux
+      // agents créant le même producteur en même temps obtenaient un 500.
       if (isUniqueViolation(error, 'producers_meter_serial_number_key')) {
         throw new MeterAlreadyAssignedError();
+      }
+      if (
+        isUniqueViolation(error, 'producers_phone_number_key') ||
+        isUniqueViolation(error, 'users_phone_number_key')
+      ) {
+        throw new PhoneAlreadyRegisteredError();
       }
       throw error;
     }

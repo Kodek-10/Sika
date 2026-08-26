@@ -8,7 +8,7 @@ export interface EstimatedYield {
 }
 
 /**
- * Adaptateur yield-model — ⚠️ PROVISOIRE (D6, DECISIONS-DEV3.md).
+ * Adaptateur yield-model — ⚠️ PROVISOIRE (D6, docs/decisions/DECISIONS-DEV3.md).
  *
  * Implémente la signature proposée `estimateExpectedYield(substrate, quantityKg,
  * climateZone)` en lisant le référentiel `yield_reference` en base. Aucun
