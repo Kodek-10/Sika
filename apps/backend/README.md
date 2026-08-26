@@ -19,7 +19,7 @@ Transforme une déclaration brute en score de confiance exploitable. Réalise FR
 | `anti-fraud/` | Vérification origine photo, unicité compteur | INV-001, INV-002, FRB-001 |
 | `producers/` | CRUD producteurs, association compteur | INV-001 |
 
-> Statut : squelette en place + **auth, producteurs et orchestration scoring implémentés** : `POST /auth/login` (JWT, gardes globaux `JwtAuthGuard`/`RolesGuard`, décorateurs `@Public()`/`@Roles()`), `POST /producers` (création atomique producteur + compte `users`, unicité compteur INV-001), `GET /producers/:id`, et `ScoringService` (historique DB → fourchette via adaptateur yield-model **provisoire D6** → moteur pur → persistance scores+alertes ; appelé par `POST /declarations` à venir). Les autres sous-modules n'exposent pas encore d'endpoints. Comptes de démo : `infra/seeds/demo-users.sh`.
+> Statut : squelette en place + **auth, producteurs, orchestration scoring et alertes implémentés** : `POST /auth/login` (JWT, gardes globaux `JwtAuthGuard`/`RolesGuard`, décorateurs `@Public()`/`@Roles()`), `POST /producers` (création atomique producteur + compte `users`, unicité compteur INV-001), `GET /producers/:id`, `ScoringService` (historique DB → fourchette via adaptateur yield-model **provisoire D6** → moteur pur → persistance scores+alertes ; appelé par `POST /declarations` à venir) et `GET /alerts` (FR-004/FR-010). Les autres sous-modules n'exposent pas encore d'endpoints. Comptes de démo : `infra/seeds/demo-users.sh`.
 
 ## 3. Documents de référence
 

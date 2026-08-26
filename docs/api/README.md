@@ -13,7 +13,7 @@
 | `GET /producers/:id/score` | Dev 1 | `packages/payments/` (Dev 2), `apps/dashboard/` | Spécifié — **contrat critique inter-devs** | À vérifier avant intégration Dev 2 |
 | `POST /declarations` | Dev 1 | `apps/field-app/` (Dev 3) | Spécifié — **contrat critique inter-devs** | À vérifier avant intégration Dev 3 |
 | `GET /declarations/:producerId` | Dev 1 | `apps/dashboard/` | Spécifié | — |
-| `GET /alerts` | Dev 1 | `apps/dashboard/` | Spécifié | — |
+| `GET /alerts` | Dev 1 | `apps/dashboard/` | Implémenté — vérifié en local (rôles agent/imf/mmpe, liste vide sans alerte) | PR alerts : mapping camelCase + tri `detected_at DESC` testés par unitaires |
 | `POST /payments/payout` | Dev 1 | `packages/payments/` (Dev 2) | Spécifié — **contrat critique inter-devs** | À vérifier avant intégration Dev 2 |
 
 ## Contrats internes (non-HTTP, entre packages)
