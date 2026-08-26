@@ -1,0 +1,19 @@
+{
+  "name": "@sika/payments",
+  "version": "0.1.0",
+  "description": "Intégration Mobile Money Sika — pur, sans accès base (Dev 2).",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "jest"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.13",
+    "@types/node": "^22.0.0",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.2.5",
+    "typescript": "^5.6.3"
+  },
+  "private": true
+}

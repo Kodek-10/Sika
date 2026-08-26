@@ -7,6 +7,7 @@ import { DeclarationsModule } from './declarations/declarations.module';
 import { ScoringModule } from './scoring/scoring.module';
 import { AuthModule } from './auth/auth.module';
 import { AntiFraudModule } from './anti-fraud/anti-fraud.module';
+import { PaymentsModule } from './payments/payments.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { AntiFraudModule } from './anti-fraud/anti-fraud.module';
     ScoringModule,
     AuthModule,
     AntiFraudModule,
+    PaymentsModule,
   ],
   controllers: [HealthController],
 })

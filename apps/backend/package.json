@@ -2,7 +2,7 @@
   "name": "@sika/backend",
   "version": "0.1.0",
   "private": true,
-  "description": "Backend SIKA — NestJS, moteur de scoring, sécurité (Dev 1)",
+  "description": "Backend SIKA \u2014 NestJS, moteur de scoring, s\u00e9curit\u00e9 (Dev 1)",
   "scripts": {
     "build": "nest build",
     "start": "node dist/main.js",
@@ -16,6 +16,7 @@
     "@nestjs/core": "^11.0.0",
     "@nestjs/jwt": "^11.0.2",
     "@nestjs/platform-express": "^11.0.0",
+    "@sika/payments": "file:../../packages/payments",
     "@sika/scoring-engine": "file:../../packages/scoring-engine",
     "bcryptjs": "^3.0.3",
     "class-transformer": "^0.5.1",
