@@ -6,7 +6,8 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc",
-    "test": "jest"
+    "test": "jest",
+    "business-model": "node tools/business-model.mjs"
   },
   "devDependencies": {
     "@types/jest": "^29.5.13",
