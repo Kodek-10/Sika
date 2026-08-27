@@ -67,23 +67,34 @@ La ligne `payments` est **réservée avant** l'appel à l'opérateur : si le pro
 
 ## 6. Modèle économique
 
-| Phase | Source de revenu | Statut |
+Le modèle chiffré vit dans [`BUSINESS-MODEL.md`](./BUSINESS-MODEL.md), **généré**
+par `npm run business-model`. Aucun chiffre n'y est écrit à la main : chaque
+hypothèse porte son statut et sa source, toute l'arithmétique est dérivée.
+
+| Phase | Source de revenu | Statut réel |
 |---|---|---|
-| Phase 1 | Subvention / contrat pilote MMPE | Priorité |
-| Phase 1 (en construction) | Commission sur crédit (IMF) | Premiers contacts en cours |
-| Phase 2+ | Frais de vérification carbone | Non activée |
+| Phase 1 | Subvention / contrat pilote MMPE | **Priorité** — seule voie qui couvre les coûts |
+| Phase 1 | Commission sur crédit (IMF) | Aucune IMF contactée. Ne couvre pas le coût du suivi (§7 du modèle) — argument de traction, pas ligne de recette |
+| Phase 2+ | Frais de vérification carbone | Non activée, volontairement hors des chiffres |
+
+Trois inconnues portent tout le modèle : le coût réel d'une visite terrain, la
+part de producteurs franchissant le seuil D1, et qui supporte la commission
+Mobile Money. Voir `BUSINESS-MODEL.md` §10.
 
 ## 7. Points de vigilance
 
 - BR-004 : ne jamais présenter un partenariat comme signé sans preuve écrite — voir `PARTNERSHIPS.md`. À ce jour, **aucun partenariat n'est signé**.
 - L'intégration Mobile Money est **simulée**. La conformité BCEAO/UEMOA n'a été vérifiée qu'en grandes lignes, pas validée juridiquement (SECURITY.md §5).
 - Ne jamais loguer en clair une référence de transaction ni un numéro de téléphone.
-- Rester synchronisé avec Dev 1 sur ce que le score peut réellement garantir — les seuils D1-D3 ne sont pas ratifiés (`docs/decisions/DECISIONS-DEV2.md`).
+- Rester synchronisé avec Dev 1 sur ce que le score peut réellement garantir — les seuils D1-D3 ne sont pas ratifiés (`docs/decisions/DECISIONS-DEV2.md`). **D1 n'est pas qu'un réglage technique : il détermine la part de producteurs éligibles, donc la recette.** Il ne devrait pas être arbitré sans Dev 2.
+- **Aucun opérateur Mobile Money n'est identifié.** Trois questions bloquantes à lui poser par écrit — dont « qui supporte la commission » — sont listées dans `PARTNERSHIPS.md` §2.
+- Les chiffres de `BUSINESS-MODEL.md` sont **dérivés d'hypothèses, pas mesurés**. Ne jamais les citer sans leur statut.
 
 ## 8. Setup local
 
 ```bash
 npm install
-npm test          # 16 tests
-npm run build     # compilation TypeScript vers dist/
+npm test               # 16 tests
+npm run build          # compilation TypeScript vers dist/
+npm run business-model # régénère BUSINESS-MODEL.md depuis les hypothèses
 ```
