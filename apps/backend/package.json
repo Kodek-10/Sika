@@ -18,6 +18,7 @@
     "@nestjs/platform-express": "^11.0.0",
     "@sika/payments": "file:../../packages/payments",
     "@sika/scoring-engine": "file:../../packages/scoring-engine",
+    "@sika/yield-model": "file:../../packages/scoring-engine/yield-model",
     "bcryptjs": "^3.0.3",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
