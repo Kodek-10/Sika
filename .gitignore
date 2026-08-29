@@ -26,6 +26,9 @@ coverage/
 # Plan d'implémentation interne — jamais push
 IMPLEMENTATION_PLAN.md
 
+# Uploads locaux (POST /photos en dev sans MinIO)
+uploads/
+
 # OS / éditeur
 .DS_Store
 .vscode/

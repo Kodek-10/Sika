@@ -8,6 +8,7 @@ import { ScoringModule } from './scoring/scoring.module';
 import { AuthModule } from './auth/auth.module';
 import { AntiFraudModule } from './anti-fraud/anti-fraud.module';
 import { PaymentsModule } from './payments/payments.module';
+import { PhotosModule } from './photos/photos.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { PaymentsModule } from './payments/payments.module';
     AuthModule,
     AntiFraudModule,
     PaymentsModule,
+    PhotosModule,
   ],
   controllers: [HealthController],
 })
