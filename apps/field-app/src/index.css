@@ -1,0 +1,183 @@
+.app {
+  font-family: system-ui, -apple-system, sans-serif;
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 16px;
+  color: #1a1a1a;
+  min-height: 100vh;
+  background: #fafaf8;
+}
+
+.app h1 {
+  color: #B8860B;
+  font-size: 1.5rem;
+  margin: 0 0 8px 0;
+}
+
+.app h2 {
+  font-size: 1.15rem;
+  color: #333;
+  margin: 20px 0 12px 0;
+}
+
+.offline-banner {
+  background: #e8a000;
+  color: #fff;
+  padding: 8px 12px;
+  border-radius: 6px;
+  text-align: center;
+  font-weight: 600;
+  margin-bottom: 16px;
+  font-size: 0.9rem;
+}
+
+.online-banner {
+  background: #4caf50;
+  color: #fff;
+  padding: 8px 12px;
+  border-radius: 6px;
+  text-align: center;
+  font-weight: 600;
+  margin-bottom: 16px;
+  font-size: 0.9rem;
+}
+
+.card {
+  background: #fff;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 4px;
+  color: #555;
+}
+
+input, select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 1rem;
+  margin-bottom: 12px;
+  box-sizing: border-box;
+}
+
+input:focus, select:focus {
+  outline: none;
+  border-color: #B8860B;
+  box-shadow: 0 0 0 2px rgba(184, 134, 11, 0.15);
+}
+
+button {
+  width: 100%;
+  padding: 14px;
+  background: #B8860B;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 8px;
+}
+
+button:hover {
+  background: #9a7209;
+}
+
+button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+button.secondary {
+  background: #555;
+}
+
+button.secondary:hover {
+  background: #333;
+}
+
+.jauge {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 12px 0;
+}
+
+.jauge-bar {
+  flex: 1;
+  height: 24px;
+  background: #e0e0e0;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.jauge-fill {
+  height: 100%;
+  border-radius: 12px;
+  transition: width 0.5s ease;
+}
+
+.jauge-fill.secure { background: #4caf50; }
+.jauge-wrap { background: #ff9800; }
+.jauge-danger { background: #f44336; }
+
+.jauge-text {
+  font-size: 1.3rem;
+  font-weight: 700;
+  min-width: 48px;
+  text-align: right;
+}
+
+.alerte {
+  padding: 12px;
+  border-radius: 6px;
+  margin-bottom: 8px;
+  font-size: 0.9rem;
+}
+
+.alerte.maintenance {
+  background: #fff3e0;
+  border-left: 4px solid #ff9800;
+}
+
+.alerte.sur_declaration {
+  background: #ffebee;
+  border-left: 4px solid #f44336;
+}
+
+.history-item {
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.history-item:last-child {
+  border-bottom: none;
+}
+
+.queue-item {
+  padding: 8px 12px;
+  background: #fff8e1;
+  border-radius: 6px;
+  margin-bottom: 6px;
+  font-size: 0.85rem;
+}
+
+.status-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 6px;
+}
+
+.status-dot.pending { background: #ff9800; }
+.status-dot.synced { background: #4caf50; }
+.status-dot.error { background: #f44336; }
