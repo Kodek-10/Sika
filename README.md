@@ -37,7 +37,7 @@ sika/
 │   └── dashboard/             # non attribué
 ├── packages/
 │   ├── scoring-engine/        # Dev 1 — implémenté ✅
-│   ├── scoring-engine/yield-model/  # Dev 3 — à livrer
+│   ├── scoring-engine/yield-model/  # Dev 3 — implémenté ✅
 │   ├── payments/              # Dev 2 — implémenté ✅
 │   └── shared-types/          # à démarrer
 └── infra/                     # migrations, compose, seeds
@@ -45,7 +45,7 @@ sika/
 
 ## État du projet
 
-Le flux central est **complet côté API** (11 endpoints, 32 tests unitaires passent) et le **field-app est implémenté** (PWA offline-first). Le yield-model et le dashboard restent à livrer.
+Le flux central est **complet côté API** (11 endpoints, 32 tests unitaires passent), le **field-app** et le **yield-model** sont implémentés. Le dashboard et shared-types restent à démarrer.
 
 Détail par module : [`docs/README.md`](./docs/README.md) section « Statut actuel ».
 
