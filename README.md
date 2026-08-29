@@ -17,7 +17,8 @@ sika/
 ├── PROJECT_OVERVIEW.md
 ├── CONTRIBUTING.md
 ├── SECURITY.md
-├── docs/                          # documentation traçable (voir docs/README.md)
+├── IMPLEMENTATION_PLAN.md      # Plan interne — jamais pushé
+├── docs/                      # documentation traçable (voir docs/README.md)
 │   ├── produit/
 │   ├── exigences-produit/
 │   ├── architecture/
@@ -28,22 +29,24 @@ sika/
 │   ├── developpement/
 │   ├── test/
 │   ├── demo/
-│   ├── decisions/                 # décisions inter-devs non ratifiées
+│   ├── decisions/             # décisions inter-devs ratifiées
 │   └── adr/
 ├── apps/
-│   ├── backend/                   # Dev 1 — NestJS
-│   ├── field-app/                  # Dev 3 — PWA offline-first
-│   └── dashboard/                  # non attribué
+│   ├── backend/               # Dev 1 — NestJS (implémenté ✅)
+│   ├── field-app/             # Dev 3 — PWA offline-first (implémenté ✅)
+│   └── dashboard/             # non attribué
 ├── packages/
-│   ├── scoring-engine/             # Dev 1 — implémenté (+ yield-model/ = Dev 3, non livré)
-│   ├── payments/                   # Dev 2 — implémenté (opérateur simulé)
-│   └── shared-types/               # non démarré
-└── infra/                          # migrations, compose, seeds
+│   ├── scoring-engine/        # Dev 1 — implémenté ✅
+│   ├── scoring-engine/yield-model/  # Dev 3 — à livrer
+│   ├── payments/              # Dev 2 — implémenté ✅
+│   └── shared-types/          # à démarrer
+└── infra/                     # migrations, compose, seeds
 ```
 
 ## État du projet
 
-Le flux central est complet **côté API** (11 endpoints, 96 tests verts) ; il n'a pas encore d'interface.
+Le flux central est **complet côté API** (11 endpoints, 32 tests unitaires passent) et le **field-app est implémenté** (PWA offline-first). Le yield-model et le dashboard restent à livrer.
+
 Détail par module : [`docs/README.md`](./docs/README.md) section « Statut actuel ».
 
 ## Le flux à ne jamais perdre de vue
