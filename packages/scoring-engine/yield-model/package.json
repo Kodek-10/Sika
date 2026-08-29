@@ -1,0 +1,23 @@
+{
+  "name": "@sika/yield-model",
+  "version": "0.1.0",
+  "description": "Modèle de rendement Sika — Dev 3",
+    "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "jest",
+    "dev": "tsc --watch"
+  },
+  "dependencies": {
+    "@sika/scoring-engine": "file:../scoring-engine"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.13",
+    "@types/node": "^22.0.0",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.2.5",
+    "typescript": "~5.6.3"
+  },
+  "private": true
+}

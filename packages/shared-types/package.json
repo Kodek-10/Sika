@@ -1,0 +1,12 @@
+{
+  "name": "@sika/shared-types",
+  "version": "0.1.0",
+  "description": "Types partagés entre backend, field-app et packages — Sika",
+    "main": "src/index.ts",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "jest"
+  },
+  "license": "MIT"
+}

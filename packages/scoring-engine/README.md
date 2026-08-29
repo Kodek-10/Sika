@@ -21,7 +21,13 @@ Sous la fourchette → alerte `maintenance`, score **non dégradé** (INV-003). 
 
 Implémentation (INV-003) : lecture sous la fourchette ⇒ signal intrant/extrant forcé à 100 pour ce cycle — mécaniquement, le score ne peut pas bouger à cause de cet événement seul. La pénalité douce entre +15 % et +100 % s'applique sans alerte (filtrage du bruit de mesure).
 
-## 3. `yield-model/` — modèle de rendement (Dev 3)
+## 3. `yield-model/` — modèle de rendement (Dev 3) ✅ Implémenté
+
+Le package `packages/scoring-engine/yield-model/` expose `estimateExpectedYield(substrate, quantityKg, climateZone)` et est consommé par `apps/backend/src/scoring/yield-model.adapter.ts`.
+
+- **Build** : `cd packages/scoring-engine/yield-model && npm run build`
+- **Tests** : `cd packages/scoring-engine/yield-model && npm test`
+- **Référentiel** : `infra/migrations/0003_seed_yield_reference_provisoire.sql` (provisoire, angle mort coefficient nord)
 
 Table de référence par substrat + coefficients climatiques. Schéma exact : [`docs/donnees/dictionnaire-de-donnees.md`](../../docs/donnees/dictionnaire-de-donnees.md), table `yield_reference`. Angle mort actuel : coefficient climatique nord provisoire, sans source ivoirienne directe.
 

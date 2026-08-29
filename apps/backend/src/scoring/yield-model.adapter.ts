@@ -1,5 +1,6 @@
 import { Injectable, UnprocessableEntityException } from '@nestjs/common';
 import { DatabaseService } from '../db/database.service';
+import { estimateExpectedYield, type YieldReferenceRow } from '@sika/yield-model';
 
 export interface EstimatedYield {
   minM3: number;
@@ -8,15 +9,11 @@ export interface EstimatedYield {
 }
 
 /**
- * Adaptateur yield-model — ⚠️ PROVISOIRE (D6, docs/decisions/DECISIONS-DEV3.md).
+ * Adaptateur yield-model — pont vers `packages/scoring-engine/yield-model/`.
  *
- * Implémente la signature proposée `estimateExpectedYield(substrate, quantityKg,
- * climateZone)` en lisant le référentiel `yield_reference` en base. Aucun
- * coefficient n'est hardcodé ici (règle du module) — tout vient du référentiel.
- *
- * Quand Dev 3 livre `packages/scoring-engine/yield-model/`, CE FICHIER SEUL est
- * remplacé par un pont vers son implémentation : le reste du backend ne connaît
- * que cette interface.
+ * Lit le référentiel `yield_reference` en base et délègue le calcul à
+ * `estimateExpectedYield()`. Aucun coefficient n'est codé en dur ici
+ * (règle du module) — tout vient du référentiel.
  */
 @Injectable()
 export class YieldModelAdapter {
@@ -27,13 +24,7 @@ export class YieldModelAdapter {
     quantityKg: number,
     climateZone: 'sud' | 'nord',
   ): Promise<EstimatedYield> {
-    const { rows } = await this.db.query<{
-      min_m3_per_kg: string;
-      max_m3_per_kg: string;
-      reliability: EstimatedYield['reliability'];
-      climate_coefficient_sud: string;
-      climate_coefficient_nord: string;
-    }>(
+    const { rows } = await this.db.query<YieldReferenceRow>(
       `SELECT min_m3_per_kg, max_m3_per_kg, reliability,
               climate_coefficient_sud, climate_coefficient_nord
          FROM yield_reference
@@ -46,15 +37,17 @@ export class YieldModelAdapter {
     }
 
     const ref = rows[0];
-    const coefficient =
-      climateZone === 'nord'
-        ? Number(ref.climate_coefficient_nord)
-        : Number(ref.climate_coefficient_sud);
+    const result = estimateExpectedYield(
+      substrate,
+      quantityKg,
+      climateZone,
+      ref,
+    );
 
     return {
-      minM3: Number(ref.min_m3_per_kg) * quantityKg * coefficient,
-      maxM3: Number(ref.max_m3_per_kg) * quantityKg * coefficient,
-      reliability: ref.reliability,
+      minM3: result.minM3,
+      maxM3: result.maxM3,
+      reliability: result.reliability,
     };
   }
 }

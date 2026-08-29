@@ -1,39 +1,46 @@
-# Field App (PWA offline-first) & Calibration scientifique
+# Field App (PWA offline-first) — `apps/field-app/`
 
 > Propriétaire : Dev 3
-> Consommé par : `apps/backend/`, `packages/scoring-engine/yield-model/`
-> Voir aussi : [`packages/scoring-engine/README.md`](../../packages/scoring-engine/README.md) · [`docs/exigences-produit/logiciel.md`](../../docs/exigences-produit/logiciel.md) · [`docs/guide-connecteur/README.md`](../../docs/guide-connecteur/README.md)
+> Dépend de : `apps/backend/` (API), `packages/shared-types/` (types)
+> Voir aussi : [`docs/exigences-produit/logiciel.md`](../../docs/exigences-produit/logiciel.md) · [`docs/guide-connecteur/README.md`](../../docs/guide-connecteur/README.md)
 
 ## 1. Rôle de ce module
 
-Réalise FR-001 (UI), FR-002, FR-008. Porte la crédibilité terrain (app utilisable sans réseau) et, via `packages/scoring-engine/yield-model/`, la crédibilité scientifique du scoring.
+Réalise FR-001 (UI), FR-002, FR-008. Porte la crédibilité terrain (app utilisable sans réseau).
+
+**Implémenté** ✅ — PWA React + Vite, offline-first avec IndexedDB.
 
 ## 2. Écrans / fonctionnalités (`src/`)
 
 | Module | Rôle | Exigences |
 |---|---|---|
-| `declaration/` | Formulaire quantité/type/durée | FR-001, FRB-003 |
-| `meter-reading/` | Capture photo compteur, horodatage, géoloc automatiques | FR-002, INV-002, FRB-001 |
-| `offline-sync/` | File d'attente locale + synchronisation | FR-008, FRB-002 |
+| `DeclarationPage` | Formulaire quantité/type/durée + capture | FR-001, FRB-003 |
+| `ScorePage` | Jauge score + éligibilité | FR-005 |
+| `HistoryPage` | Historique déclarations | FR-005 |
+| `QueuePage` | File d'attente locale + statut sync | FR-008, FRB-002 |
+| `AppContext` | Offline sync, localStorage queue | FR-008, FRB-002 |
+| `api.ts` | Client HTTP vers `apps/backend/` | FR-001 à FR-010 |
 
-Le détail du protocole d'extraction/idempotence de la synchronisation hors-ligne est documenté dans [`docs/guide-connecteur/README.md`](../../docs/guide-connecteur/README.md).
+## 3. Stack
 
-## 3. Contrainte non négociable
+- **React 19 + TypeScript** via Vite
+- **PWA** : service worker + manifest.json
+- **Offline** : localStorage pour la file d'attente, IndexedDB ready
+- **Proxy** : `/api` → `http://localhost:3000`
 
-Le mode hors-ligne doit être **réellement testé** (réseau physiquement coupé), pas supposé fonctionner en théorie — voir FRB-002.
-
-## 4. Modèle de rendement
-
-Vit dans `packages/scoring-engine/yield-model/` (consommé par le scoring). Documentation complète : [`packages/scoring-engine/README.md`](../../packages/scoring-engine/README.md).
-
-## 5. Points de vigilance
-
-- Ne pas chercher une précision scientifique irréaliste — une fourchette large et honnête plutôt qu'un chiffre précis et faux.
-- Garder trace des sources par substrat (voir `docs/donnees/dictionnaire-de-donnees.md`, table `yield_reference`).
-
-## 6. Setup local
+## 4. Setup local
 
 ```bash
 npm install
-npm run dev
+npm run dev       # port 3001, proxy vers backend :3000
+npm run build
 ```
+
+## 5. À faire
+
+- [ ] Remplacer la navigation par ID producteur par l'authentification (`POST /auth/login`)
+- [ ] Intégrer `packages/shared-types/` pour les types partagés
+- [ ] Tester le mode hors-ligne réel (réseau coupé physiquement) — FRB-002
+- [ ] Vérification photo : lien avec `POST /photos` (D9) une fois implémenté côté backend
+- [ ] Ajouter le store IndexedDB pour persistance plus fiable que localStorage
+- [ ] Améliorer le design conformément à `docs/design/identite-visuelle.md`

@@ -38,14 +38,12 @@ Une lecture sous la fourchette attendue déclenche une alerte de type `maintenan
 ### BR-002 — Seuil de sur-déclaration suspecte
 Une lecture supérieure à +100% de la borne haute de la fourchette attendue déclenche une alerte `sur_declaration` et une priorité d'audit. Le seuil de +100% est volontairement large pour ne détecter que les écarts flagrants, pas le bruit de mesure du compteur à bulles (±15-20%).
 **Lié à** : FR-004.
-
 ### BR-003 — Éligibilité au versement Mobile Money
-Un producteur est éligible à un versement si **toutes** ces conditions sont vraies :
-1. son score ≥ **70/100** (D1) ;
-2. il a au moins **3 déclarations** à son historique (D2) — évite qu'un producteur devienne éligible sur une seule déclaration favorable ;
-3. il n'a **aucune alerte bloquante non résolue**. Une alerte `sur_declaration` bloque toujours ; une alerte `maintenance` **ne bloque pas** (D3), sans quoi on punirait une sous-performance — ce que BR-001 interdit explicitement.
 
-Ces trois valeurs sont **provisoires en attente de ratification inter-devs** : elles sont isolées dans `apps/backend/src/scoring/scoring.constants.ts` pour qu'un accord se traduise par une ligne à changer, sans refactor. Voir `docs/decisions/DECISIONS-DEV2.md`.
+Un producteur est éligible à un versement si **toutes** ces conditions sont vraies :
+1. son score ≥ **70/100** (D1, ADR-0004) ;
+2. il a au moins **3 déclarations** à son historique (D2, ADR-0004) — évite qu'un producteur devienne éligible sur une seule déclaration favorable ;
+3. il n'a **aucune alerte bloquante non résolue**. Une alerte `sur_declaration` bloque toujours ; une alerte `maintenance` **ne bloque pas** (D3, ADR-0004), sans quoi on punirait une sous-performance — ce que BR-001 interdit explicitement.
 
 L'éligibilité est décidée **uniquement** par `GET /producers/:id/score`. `packages/payments/` la consomme et ne la recalcule jamais.
 **Lié à** : FR-007, BR-001.
