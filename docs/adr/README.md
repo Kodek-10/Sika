@@ -9,6 +9,7 @@
 | [0001](./0001-capteur-mecanique-vs-iot.md) | Capteur mécanique low-cost plutôt qu'IoT électronique | Actif |
 | [0002](./0002-separation-scoring-yield-model.md) | Séparation du moteur de scoring et du modèle de rendement | Actif |
 | [0003](./0003-renommage-biotrust-vers-sika.md) | Renommage du projet de BioTrust vers Sika | Actif |
+| [0004](./0004-criteres-eligibilite-versement.md) | Critères d'éligibilité au versement Mobile Money (BR-003) | Actif |
 
 ## Format d'un ADR
 
