@@ -3,9 +3,9 @@
 > Référencé par `apps/backend/src/scoring/yield-model.adapter.ts` et
 > `infra/migrations/0003_seed_yield_reference_provisoire.sql`.
 
-## D6 — Qui appelle `estimateExpectedYield()` ?
+## D6 — Qui appelle `estimateExpectedYield()` ✅ RATIFIÉE
 
-**Statut** : appliqué par défaut, **non ratifié**.
+**Statut** : **ratifiée** (D6 — ADR-0004).
 **Décision retenue** : c'est **le backend** qui appelle le modèle de rendement et transmet la fourchette `{ minM3, maxM3 }` résultante au moteur de scoring. Le moteur n'importe jamais `yield-model/`.
 
 **Pourquoi** : préserve la pureté du moteur (INV-005, déterminisme total, aucun accès base). Le moteur reste testable sans base ni mock de référentiel. Cohérent avec ADR-0002.
