@@ -62,8 +62,8 @@ cd apps/backend           && npm run test:e2e   # nécessite docker + migrations
 ```
 
 **Ce qui n'est PAS couvert**, et doit être dit comme tel :
-- FRB-002 (file d'attente hors-ligne) : `apps/field-app/` n'existe pas.
-- FRB-003 (validation du formulaire) : côté UI, non implémenté.
-- FRB-005 (distinction visuelle des alertes) : aucune interface.
-- FRB-001 : couvert **partiellement** — voir `../decisions/DECISIONS-DEV3.md` (D11).
+- FRB-002 (file d'attente hors-ligne) : **test manuel documenté** `FRB-002-offline-test.md` (field-app existe, `AppContext` + `localStorage`, idempotence vérifiée) — pas d'automatisation.
+- FRB-003 (validation du formulaire) : côté UI, partiellement (bornes `CreateDeclarationDto`, mais pas de tests UI).
+- FRB-005 (distinction visuelle des alertes) : aucune interface (dashboard manquant).
+- FRB-001 : couvert **partiellement** — `POST /photos` basique livré, HMAC/EXIF en attente D11.
 - Le scénario de démo bout-en-bout n'a jamais été exécuté contre une vraie base sur cette machine (Docker absent de l'environnement de développement utilisé pour ce lot).
